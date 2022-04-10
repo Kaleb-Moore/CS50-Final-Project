@@ -1,3 +1,5 @@
+import re
+from telnetlib import AO
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
@@ -21,6 +23,7 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///user.db")
+inv = SQL("sqlite:///inventory.db")
 
 
 @app.after_request
@@ -41,15 +44,48 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/buy", methods=["GET", "POST"])
+@app.route("/receive", methods=["GET", "POST"])
 @login_required
-def buy():
-    """Buy shares of stock"""
+def receive():
+    
+    if request.method == "POST":
+        part = request.form.get("part")
+        qty = request.form.get("qty")
+        cost = request.form.get("cost")
+        price = request.form.get("price")  
+
+        if not part:
+            return apology("Please provide a part name")
+        if not qty:
+            return apology("Please provide a qty")
+        if not cost:
+            return apology("Please provide a cost")
+        if not price:
+            return apology("Please provide a sell price")
+
+        
+        try:
+            qty = int(request.form.get("qty"))
+        except:
+            return apology("Quantity must be an integer")
+            
+        try:
+            cost = int(request.form.get("cost"))
+        except:
+            return apology("Cost must be an integer")
+
+        try:
+            price = int(request.form.get("price"))
+        except:
+            return apology("Sell Price must be an integer")
+
+    else:
+        return render_template("receive.html")
     
 
-@app.route("/history")
+@app.route("/logs")
 @login_required
-def history():
+def logs():
     """Show history of transactions"""
     user_id = session["user_id"]
     
@@ -100,14 +136,6 @@ def logout():
 
     # Redirect user to login form
     return redirect("/")
-
-
-@app.route("/quote", methods=["GET", "POST"])
-@login_required
-def quote():
-    """Get stock quote."""
-    
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
