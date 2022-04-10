@@ -99,7 +99,8 @@ def receive():
 @login_required
 def logs():
     """Show history of transactions"""
-    user_id = session["user_id"]
+    logs = inv.execute("SELECT * FROM transactions")
+    return render_template("logs.html", logs=logs)
     
 
 

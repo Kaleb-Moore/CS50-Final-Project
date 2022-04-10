@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Receiving / Sell Logs
+{% endblock %}
+
+{% block main %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Part Number</th>
+            <th>QTY</th>
+            <th>Sell Price</th>
+            <th>Cost</th>
+            <th>Type</th>
+            <th>Transacted</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for log in logs %}
+        <tr>
+            <td> {{ log["part"].lower() }}</td>
+            <td> {{ log["quantity"] }}</td>
+            <td> {{ log["sell"] }}</td>
+            <td> {{ log["cost"] }}</td>
+            <td> {{ log["type"] }}</td>
+            <td> {{ log["time"] }}</td>
+        </tr>
+        {% endfor%}
+    </tbody>
+</table>
+{% endblock %}
