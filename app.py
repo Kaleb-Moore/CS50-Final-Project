@@ -1,5 +1,6 @@
 import re
 from telnetlib import AO
+from turtle import setundobuffer
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
@@ -49,7 +50,7 @@ def index():
 def receive():
     
     if request.method == "POST":
-        part = request.form.get("part")
+        part = request.form.get("part").lower()
         qty = request.form.get("qty")
         cost = request.form.get("cost")
         price = request.form.get("price")  
@@ -79,6 +80,16 @@ def receive():
         except:
             return apology("Sell Price must be an integer")
 
+        rows = inv.execute("SELECT * FROM inventory WHERE part = ?", part.lower())
+
+        if len(rows) != 1:
+            inv.execute("INSERT INTO inventory (part, quantity, cost, sell, type) VALUES (?, ?, ?, ?, ?)",
+                        part, qty, cost, price, "received")
+            return render_template("index.html")
+        else:
+            update = inv.execute("SELECT * FROM inventory WHERE part = ?", part)[0]["quantity"]
+            inv.execute("UPDATE inventory SET quantity = (? + ?) WHERE part = ?", update, qty, part)
+            return render_template("index.html")
     else:
         return render_template("receive.html")
     
