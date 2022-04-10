@@ -39,7 +39,6 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
-    """Show portfolio of stocks"""
     user_id = session["user_id"]
 
     return render_template("index.html")
@@ -83,13 +82,15 @@ def receive():
         rows = inv.execute("SELECT * FROM inventory WHERE part = ?", part.lower())
 
         if len(rows) != 1:
-            inv.execute("INSERT INTO inventory (part, quantity, cost, sell, type) VALUES (?, ?, ?, ?, ?)",
-                        part, qty, cost, price, "received")
-            return render_template("index.html")
+            inv.execute("INSERT INTO inventory (part, quantity, cost, sell) VALUES (?, ?, ?, ?)",
+                        part, qty, cost, price)
         else:
             update = inv.execute("SELECT * FROM inventory WHERE part = ?", part)[0]["quantity"]
             inv.execute("UPDATE inventory SET quantity = (? + ?) WHERE part = ?", update, qty, part)
-            return render_template("index.html")
+
+        inv.execute("INSERT INTO transactions (part, quantity, cost, sell, type) VALUES (?, ?, ?, ?, ?)",
+                    part, qty, cost, price, "received")
+        return render_template("index.html")
     else:
         return render_template("receive.html")
     
@@ -168,5 +169,33 @@ def register():
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
 def sell():
-    """Sell shares of stock"""
-    user_id = session["user_id"]
+    
+    if request.method == "POST":
+        part = request.form.get("part").lower().strip()
+        qty = request.form.get("qty") 
+
+        if not part:
+            return apology("Please provide a part name")
+        if not qty:
+            return apology("Please provide a qty")
+
+        try:
+            qty = int(request.form.get("qty"))
+        except:
+            return apology("Quantity must be an integer")
+
+        canSell = inv.execute("SELECT * FROM inventory WHERE part = ?", part)
+
+
+        if len(canSell) != 1 or canSell[0]["quantity"] == 0:
+            return apology("You don't have that part to sell")
+        else:
+            cost = canSell[0]["cost"]
+            sell = canSell[0]["sell"]
+            inv.execute("UPDATE inventory SET quantity = (? - ?) WHERE part = ?", canSell[0]["quantity"], qty, part)
+            inv.execute("INSERT INTO transactions (part, quantity, cost, sell, type) VALUES (?, ?, ?, ?, ?)",
+                        part, qty, cost, sell, "sell")
+            return render_template("index.html")
+
+    else:
+        return render_template("sell.html")
