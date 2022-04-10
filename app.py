@@ -39,9 +39,9 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
-    user_id = session["user_id"]
-
-    return render_template("index.html")
+    
+    parts = inv.execute("SELECT * FROM inventory")
+    return render_template("index.html", parts=parts)
 
 
 @app.route("/receive", methods=["GET", "POST"])
@@ -49,7 +49,7 @@ def index():
 def receive():
     
     if request.method == "POST":
-        part = request.form.get("part").lower()
+        part = request.form.get("part").lower().strip()
         qty = request.form.get("qty")
         cost = request.form.get("cost")
         price = request.form.get("price")  
@@ -63,17 +63,14 @@ def receive():
         if not price:
             return apology("Please provide a sell price")
 
-        
         try:
             qty = int(request.form.get("qty"))
         except:
             return apology("Quantity must be an integer")
-            
         try:
             cost = int(request.form.get("cost"))
         except:
             return apology("Cost must be an integer")
-
         try:
             price = int(request.form.get("price"))
         except:
@@ -90,7 +87,7 @@ def receive():
 
         inv.execute("INSERT INTO transactions (part, quantity, cost, sell, type) VALUES (?, ?, ?, ?, ?)",
                     part, qty, cost, price, "received")
-        return render_template("index.html")
+        return redirect('/')
     else:
         return render_template("receive.html")
     
@@ -99,7 +96,7 @@ def receive():
 @login_required
 def logs():
     """Show history of transactions"""
-    logs = inv.execute("SELECT * FROM transactions")
+    logs = inv.execute("SELECT * FROM transactions ORDER BY time DESC")
     return render_template("logs.html", logs=logs)
     
 
@@ -196,7 +193,7 @@ def sell():
             inv.execute("UPDATE inventory SET quantity = (? - ?) WHERE part = ?", canSell[0]["quantity"], qty, part)
             inv.execute("INSERT INTO transactions (part, quantity, cost, sell, type) VALUES (?, ?, ?, ?, ?)",
                         part, qty, cost, sell, "sell")
-            return render_template("index.html")
+            return redirect('/')
 
     else:
         return render_template("sell.html")

@@ -5,5 +5,23 @@
 {% endblock %}
 
 {% block main %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Part</th>
+            <th>QTY</th>
+            <th>Sell</th>
+        </tr>
+    </thead>
 
+    <tbody>
+        {% for part in parts %}
+        <tr>
+            <td> {{ part["part"] }}</td>
+            <td> {{ part["quantity"] }}</td>
+            <td> {{ part["sell"] }}</td>
+        </tr>
+        {% endfor%}
+    </tbody>
+</table>
 {% endblock %}
