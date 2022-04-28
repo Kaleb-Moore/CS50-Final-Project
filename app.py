@@ -193,7 +193,12 @@ def sell():
             inv.execute("UPDATE inventory SET quantity = (? - ?) WHERE part = ?", canSell[0]["quantity"], qty, part)
             inv.execute("INSERT INTO transactions (part, quantity, cost, sell, type) VALUES (?, ?, ?, ?, ?)",
                         part, qty, cost, sell, "sell")
-            return redirect('/')
+            isDel = inv.execute("SELECT * FROM inventory WHERE part = ?", part)
+            if (isDel[0]["quantity"] < 1):
+                inv.execute("DELETE FROM inventory WHERE part = ?", part)
+                return redirect('/')
+            else:
+                return redirect('/')
 
     else:
         return render_template("sell.html")
