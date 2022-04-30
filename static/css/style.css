@@ -1,0 +1,74 @@
+.svg-brand
+{
+    height: 60px;
+}
+
+.btn
+{
+    background-color: #333 !important;
+    font-size: 25px !important;
+    width: 200px !important;
+    border-radius: 12px 12px 0px 0px !important;
+    font-family: poppins, sans-serif;
+}
+
+.spacer
+{
+    margin: 10px;
+}
+
+.f-container
+{
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#searchbar
+{
+    height: 53px !important;
+    margin-left: -15px !important;
+    padding-left: 60px !important;
+}
+
+.search-mag
+{
+    position: relative;
+    left: 30px;
+}
+
+.card
+{
+    border-radius: 22px !important;
+    padding: 0px !important;
+}
+
+.card-header
+{
+    border-radius: 22px 22px 0px 0px !important;
+    background-color: #333 !important;
+    color: #fff !important;
+}
+
+p
+{
+    margin-bottom: 0px !important;
+}
+
+.divider
+{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.l-container
+{
+    margin-left: 250px !important;
+    margin-right: 250px !important;
+}
+
+.container 
+{
+    padding: 0px !important;
+}
