@@ -51,7 +51,7 @@
     color: #fff !important;
 }
 
-.card-header:hover
+.card-header:hover, .t-btn:hover
 {
     background-color: #eee !important;
     color: #333 !important;
