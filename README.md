@@ -12,6 +12,24 @@ Click [here](www.youtube.com) for a video walkthrough of the program:
 ### Background
 There is no need to sign up for an account. I did this in the first iteration of the project but found it unnecessary and wanted to put my effort into making a SPA (Single Page Application) instead.
 
+### Files and their Purpose
+This project is made up of 3 primary files:
+
+>app.py
+
+>validation.py
+
+>script.js
+
+#### **app.py**
+This is where all the logic for adding and updating the database lives. Everytime one of the buttons posts to the *add* or *update* url it calls part of the function. It doesn't have to worry about if it is updating the proper entry as that information is locked in when the user clicks the product they want to edit.
+
+#### **validation.py**
+This house the main logic and checks for the *Add* modal form. I wanted to seperate this out to get a clear understanding about seperating helper functions and how to import them into my own code.
+
+#### **script.js**
+This handles all the heavy lifting for the dynamic assignment of all the input fields when editing a product as well as the search field. For a little bit I was trying to see if I could get JavaScript to execute python code on click, but learned that there is some securities in place to stop this from happening and decided to do it this way instead. Really had to learn about the DOM for this section and how it related to children.
+
 # User Instructions
 
 ## Using the Program
