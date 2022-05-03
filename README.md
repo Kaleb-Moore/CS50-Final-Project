@@ -6,7 +6,7 @@
 >This is the final project for CS50. This is a small easy to use inventory management system that can be ran in the browser.
 
 ## Introduction
-Click [here](www.youtube.com) for a video walkthrough of the program:
+Click [here](https://www.youtube.com/watch?v=Hg77ib8W1MM) for a video walkthrough of the program:
 ![site photo](static/img/MD/Site%20Photo.PNG)
 
 ### Background
